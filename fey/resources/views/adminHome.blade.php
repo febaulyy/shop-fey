@@ -18,6 +18,17 @@
         </a>
     </div>
 
+    <form action="{{ route('admin.produk.index') }}" method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Cari produk..." value="{{ request('search') }}">
+            <button class="btn btn-outline-secondary" type="submit">
+                <i class="bi bi-search"></i> Cari
+            </button>
+        </div>
+    </form>
+
+
+
     <div class="row row-cols-1 row-cols-md-3 g-4">
         @foreach($produks as $produk)
         <div class="col">

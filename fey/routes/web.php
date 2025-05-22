@@ -7,6 +7,7 @@ use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 
 // Halaman awal
@@ -77,3 +78,13 @@ Route::post('/kategori', [KategoriController::class, 'store'])->name('kategori.s
 Route::get('/kategori/{id}/edit', [KategoriController::class, 'edit'])->name('kategori.edit');
 Route::delete('/kategori/{id}', [KategoriController::class, 'destroy'])->name('kategori.destroy');
 
+Route::get('/admin/produk', [ProdukController::class, 'adminIndex'])->name('admin.produk.index');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('/user/store', [UserController::class, 'store'])->name('user.store');
+    Route::get('/profil', [HomeController::class, 'profil'])->name('profil');
+});
+
+Route::get('/profil', [UserController::class, 'profil'])->name('profil')->middleware('auth');

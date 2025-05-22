@@ -15,11 +15,11 @@ class Produk extends Model
         'harga',
         'stok',
         'foto',
+        'zip_file', // ← tambahkan ini
         'deskripsi',
         'kategori_id',
     ];
-
-    // app/Models/Produk.php
+    
 
     public function transaksis()
     {

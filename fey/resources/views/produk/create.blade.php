@@ -47,6 +47,11 @@
             <input type="file" name="foto" class="form-control shadow-sm" accept="image/*">
         </div>
 
+        <div class="mb-4">
+            <label for="zip_file" class="form-label fw-bold text-dark">File ZIP Game</label>
+            <input type="file" name="zip_file" class="form-control shadow-sm" accept=".zip" required>
+        </div>
+
         <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Tambah Produk</button>
     </form>
 </div>

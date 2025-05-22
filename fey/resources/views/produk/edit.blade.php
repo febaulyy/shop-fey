@@ -52,6 +52,11 @@
             @endif
         </div>
 
+        <div class="mb-4">
+            <label for="zip_file" class="form-label fw-bold text-dark">File ZIP Game</label>
+            <input type="file" name="zip_file" class="form-control shadow-sm" accept=".zip">
+        </div>
+        
         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
     </form>
 </div>
