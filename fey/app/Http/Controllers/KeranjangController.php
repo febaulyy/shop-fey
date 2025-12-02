@@ -18,6 +18,7 @@ class KeranjangController extends Controller
             $keranjang[$produk->id]['jumlah']++;
         } else {
             $keranjang[$produk->id] = [
+                'id' => $produk->id,
                 'nama' => $produk->nama,
                 'harga' => $produk->harga,
                 'jumlah' => 1,

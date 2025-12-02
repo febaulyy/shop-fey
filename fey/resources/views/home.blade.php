@@ -7,33 +7,35 @@
     <!-- Tombol Kategori dan Keranjang/Transaksi -->
     <div class="d-flex justify-content-between mb-4">
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="kategoriDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                Kategori
-            </button>
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="kategoriDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-tags"></i> Kategori
+        </button>
+
             <ul class="dropdown-menu" aria-labelledby="kategoriDropdown">
                 @foreach($kategoris as $kategori)
                     <li><a class="dropdown-item" href="{{ route('produk.index', ['kategori_id' => $kategori->id]) }}">{{ $kategori->nama }}</a></li>
                 @endforeach
             </ul>
-        </div>
+        </div>      
 
         <div class="d-flex gap-3">
-            <a href="{{ route('keranjang.index') }}" class="btn btn-success position-relative">
-                <i class="fa fa-shopping-cart"></i> Keranjang
-                @if(isset($keranjangCount) && $keranjangCount > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $keranjangCount }}
-                    </span>
-                @endif
-            </a>
+        <a href="{{ route('keranjang.index') }}" class="btn btn-outline-success position-relative">
+            <i class="bi bi-cart-fill"></i> Keranjang
+            @if(isset($keranjangCount) && $keranjangCount > 0)
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ $keranjangCount }}
+                </span>
+            @endif
+        </a>
 
-            <a href="{{ route('transaksi.transaksi') }}" class="btn btn-success">
-                <i class="fa fa-box"></i> Transaksi
-            </a>
+        <a href="{{ route('transaksi.transaksi') }}" class="btn btn-outline-success">
+            <i class="bi bi-box-seam"></i> Transaksi
+        </a>
 
-            <a href="{{ route('profil') }}" class="btn btn-primary">
-                <i class="fa fa-user"></i> Profil
-            </a>
+        <a href="{{ route('profil') }}" class="btn btn-outline-primary">
+            <i class="bi bi-person-circle"></i> Profil
+        </a>
+
         </div>
     </div>
 
@@ -61,13 +63,14 @@
                     <p class="card-text text-muted">Kode: {{ $produk->kode_produk }}</p>
                     <p class="card-text text-danger">Rp {{ number_format($produk->harga, 0, ',', '.') }}</p>
 
-                    <button class="btn btn-sm btn-primary mt-2" type="button"
-                            data-bs-toggle="collapse"
-                            data-bs-target="#deskripsi-{{ $produk->id }}"
-                            aria-expanded="false"
-                            aria-controls="deskripsi-{{ $produk->id }}">
-                        Lihat Deskripsi
-                    </button>
+                    <button class="btn btn-outline-primary btn-sm mt-2" type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#deskripsi-{{ $produk->id }}"
+        aria-expanded="false"
+        aria-controls="deskripsi-{{ $produk->id }}">
+    <i class="bi bi-eye"></i> Lihat Deskripsi
+</button>
+
 
                     <div class="collapse mt-2" id="deskripsi-{{ $produk->id }}">
                         <p class="card-text">{{ $produk->deskripsi }}</p>
@@ -79,19 +82,24 @@
                         <form action="{{ route('keranjang.add') }}" method="POST" class="w-100">
                             @csrf
                             <input type="hidden" name="produk_id" value="{{ $produk->id }}">
-                            <button type="submit" class="btn btn-info btn-sm w-100">
-                                <i class="fa fa-shopping-cart"></i> Tambah ke Keranjang
-                            </button>
+                            <button type="submit" class="btn btn-outline-success btn-sm w-100">
+    <i class="bi bi-cart-plus"></i> Tambah ke Keranjang
+</button>
+
                         </form>
 
-                        <a href="{{ route('produk.beli', $produk->id) }}" class="btn btn-warning btn-sm w-100">
-                            <i class="fa fa-credit-card"></i> Beli
-                        </a>
+                        <a href="{{ route('produk.beli', $produk->id) }}" class="btn btn-outline-warning btn-sm w-100">
+    <i class="bi bi-cash-coin"></i> Beli
+</a>
+
 
                         @if ($produk->zip_file)
-                            <button class="btn btn-success btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalGame-{{ $produk->id }}">
-                                <i class="fa fa-play"></i> Mainkan Game
-                            </button>
+                        <button type="button" class="btn btn-outline-info btn-sm w-100"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalGame-{{ $produk->id }}">
+                            <i class="bi bi-controller"></i> Mainkan Game
+                        </button>
+
                         @endif
                     </div>
                 </div>
@@ -125,3 +133,71 @@
     @endforeach
 </div>
 @endsection
+
+@section('scripts')
+
+@section('scripts')
+<script>
+// Timer 20 detik untuk modal game
+let timeoutId;
+
+// Gunakan event delegation di seluruh dokumen
+document.addEventListener('shown.bs.modal', function (event) {
+    const modal = event.target;
+    console.log('Modal terbuka, mulai timer 20 detik');
+
+    timeoutId = setTimeout(function () {
+        console.log('Timer selesai, tutup modal');
+
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
+
+        alert("Waktu bermain telah habis (20 detik).");
+    }, 20000);
+});
+
+document.addEventListener('hidden.bs.modal', function () {
+    console.log('Modal ditutup, clear timeout & reset iframe');
+
+    clearTimeout(timeoutId);
+
+    // Reset iframe jika ada
+    document.querySelectorAll('.modal iframe').forEach(iframe => {
+        const src = iframe.src;
+        iframe.src = '';
+        iframe.src = src;
+    });
+
+    // Hapus backdrop & kembalikan scroll jika perlu
+    document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = 'auto';
+});
+</script>
+@endsection
+
+
+<script>
+// Script untuk reset iframe & bersihkan modal backdrop & scroll
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.modal').forEach(function(modal) {
+        modal.addEventListener('hidden.bs.modal', function () {
+            const iframe = modal.querySelector('iframe');
+            if (iframe) {
+                const src = iframe.src;
+                iframe.src = '';
+                iframe.src = src;
+            }
+
+            // Hapus backdrop yang mungkin masih tersisa
+            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+
+            // Kembalikan scroll & interaksi normal
+            document.body.classList.remove('modal-open');
+            document.body.style.overflow = 'auto';
+        });
+    });
+});
+</script>

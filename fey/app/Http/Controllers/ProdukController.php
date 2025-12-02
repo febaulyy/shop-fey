@@ -112,18 +112,36 @@ class ProdukController extends Controller
             $zipFilePath = storage_path('app/public/' . $zipPath);
             $extractPath = public_path('games/' . $produk->id);
 
-        if ($zip->open($zipFilePath) === true) {
-            if (!file_exists($extractPath)) {
-                mkdir($extractPath, 0755, true);
+            if ($zip->open($zipFilePath) === true) {
+                if (!file_exists($extractPath)) {
+                    mkdir($extractPath, 0755, true);
+                }
+            
+                $zip->extractTo($extractPath);
+                $zip->close();
+            
+                // Deteksi apakah hasil ekstrak punya subfolder, dan pindahkan isi folder jika perlu
+                $subfolders = array_filter(glob($extractPath . '/*'), 'is_dir');
+            
+                if (count($subfolders) === 1) {
+                    $nestedFolder = reset($subfolders); // ambil folder di dalamnya
+                    $files = scandir($nestedFolder);
+            
+                    foreach ($files as $file) {
+                        if ($file !== '.' && $file !== '..') {
+                            rename($nestedFolder . '/' . $file, $extractPath . '/' . $file);
+                        }
+                    }
+            
+                    // Hapus folder kosong setelah isi dipindah
+                    rmdir($nestedFolder);
+                }
             }
-            $zip->extractTo($extractPath);
-            $zip->close();
-            }
+            
         }
 
         return redirect()->route('adminHome')->with('success', 'Produk berhasil ditambahkan');
     }
-
 
     public function edit($id)
     {
@@ -174,9 +192,28 @@ class ProdukController extends Controller
                 if (!file_exists($extractPath)) {
                     mkdir($extractPath, 0755, true);
                 }
+            
                 $zip->extractTo($extractPath);
                 $zip->close();
+            
+                // Deteksi apakah hasil ekstrak punya subfolder, dan pindahkan isi folder jika perlu
+                $subfolders = array_filter(glob($extractPath . '/*'), 'is_dir');
+            
+                if (count($subfolders) === 1) {
+                    $nestedFolder = reset($subfolders); // ambil folder di dalamnya
+                    $files = scandir($nestedFolder);
+            
+                    foreach ($files as $file) {
+                        if ($file !== '.' && $file !== '..') {
+                            rename($nestedFolder . '/' . $file, $extractPath . '/' . $file);
+                        }
+                    }
+            
+                    // Hapus folder kosong setelah isi dipindah
+                    rmdir($nestedFolder);
+                }
             }
+            
         }
 
         $produk->update([

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 // Halaman awal
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
 // Auth (Login & Register)

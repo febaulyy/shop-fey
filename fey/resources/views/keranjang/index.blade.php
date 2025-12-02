@@ -29,6 +29,9 @@
                         <td>{{ $item['jumlah'] }}</td>
                         <td>{{ number_format($item['harga'] * $item['jumlah'], 0, ',', '.') }}</td>
                         <td>
+                            <a href="{{ route('produk.beli', $item['id']) }}" class="btn btn-success btn-sm">
+                                Checkout
+                            </a>
                             <a href="{{ route('keranjang.remove', $id) }}"
                                class="btn btn-danger btn-sm"
                                onclick="return confirm('Yakin ingin menghapus item ini dari keranjang?')">
@@ -42,12 +45,6 @@
 
         <!-- Form Checkout -->
         <div class="text-right mt-3">
-            <!-- Mengarahkan ke halaman checkout -->
-            <form action="{{ route('checkout') }}" method="GET">
-                @csrf
-                <button type="submit" class="btn btn-success">Checkout</button>
-            </form>
-
             <a href="{{ route('keranjang.clear') }}"
                class="btn btn-warning ml-2"
                onclick="return confirm('Yakin ingin mengosongkan seluruh keranjang?')">
